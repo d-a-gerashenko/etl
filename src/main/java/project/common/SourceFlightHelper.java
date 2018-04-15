@@ -55,7 +55,7 @@ public final class SourceFlightHelper {
         if (result.length() > 40) {
             result = result.substring(0, 40) + "...";
         }
-        return result;
+        return result; 
     }
 
     private static String mergeColumn(String from, String to) {
