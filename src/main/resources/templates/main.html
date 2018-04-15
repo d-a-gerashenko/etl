@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Application</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>State</th>
+                <td id="state"></td>
+            </tr>
+            <tr>
+                <th>Percent</th>
+                <td id="completePercent"></td>
+            </tr>
+            <tr>
+                <th>Executing</th>
+                <td id="isExecuting"></td>
+            </tr>
+            <tr>
+                <th>Stop flag</th>
+                <td id="isStoping"></td>
+            </tr>
+        </table>
+        <button id="startButton">start</button>
+        <button id="stopButton">stop</button>
+        <script type="text/javascript">
+            $(function () {
+                $('#startButton').click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/turnon"
+                    });
+                });
+                $('#stopButton').click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/turnoff"
+                    });
+                });
+                var update = function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/info",
+                        success: function (jsonData) {
+                            var verbalState;
+                            switch (jsonData.state) {
+                                case 0:
+                                    verbalState = '0 - extracting';
+                                    break;
+                                case 1:
+                                    verbalState = '1 - transforming';
+                                    break;
+                                case 2:
+                                    verbalState = '2 - transforming';
+                                    break;
+                                case 3:
+                                    verbalState = '3 - all done';
+                                    break;
+                            }
+                            $('#state').html(verbalState);
+                            $('#completePercent').html(jsonData.completePercent);
+                            $('#isExecuting').html((jsonData.isExecuting) ? 'yes' : 'no');
+                            $('#isStoping').html((jsonData.isStoping) ? 'yes' : 'no');
+                            setTimeout(function () {
+                                update();
+                            }, 5000);
+                        }
+                    });
+                };
+                update();
+            });
+        </script>
+    </body>
+</html>
