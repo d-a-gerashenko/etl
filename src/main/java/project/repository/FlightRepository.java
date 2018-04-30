@@ -10,7 +10,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
     
     @Query(""
             + "SELECT "
-            + "coalesce(MAX(f.sourceItemId), 0)"
+            + "coalesce(MAX(f.sourceItemId), -1)"
             + "FROM "
             + "Flight f "
     )

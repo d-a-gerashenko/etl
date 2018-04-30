@@ -11,15 +11,15 @@ public interface SourceFlightRepository extends JpaRepository<SourceFlight, Long
 
     @Query(""
             + "SELECT "
-            + "new map(f.flightIcaoCode as flightIcaoCode, f.flightNumber as flightNumber, f.id as id) "
+            + "new map(f.flightIcaoCode as flightIcaoCode, f.flightNumber as flightNumber, min(f.id) as id) "
             + "FROM "
             + "SourceFlight f "
-            + "WHERE f.id >= :lastId "
-            + "GROUP BY f.flightIcaoCode, f.flightNumber, f.id "
-            + "ORDER BY f.id"
+            + "GROUP BY f.flightIcaoCode, f.flightNumber "
+            + "HAVING min(f.id) > :lastId "
+            + "ORDER BY id"
     )
     public List<?> findAllQniqueFlightsFromId(@Param("lastId") Long lastId, Pageable pageable);
-
+    
     @Query(""
             + "SELECT "
             + "COUNT(*)"

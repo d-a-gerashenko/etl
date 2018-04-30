@@ -77,15 +77,16 @@ public class EtlService {
     private void step0() throws Exception {
         int pageNumber = 0;
         List<?> quniqueFlights;
+        Long lastSourceItemId = flightRepository.findLastSourceItemId();
         do {
             if (stopFlag) {
                 return;
             }
             quniqueFlights = sourceFlightRepository.findAllQniqueFlightsFromId(
-                    flightRepository.findLastSourceItemId(),
+                    lastSourceItemId,
                     PageRequest.of(
                             pageNumber++,
-                            100
+                            500
                     )
             );
             quniqueFlights.forEach((t) -> {
